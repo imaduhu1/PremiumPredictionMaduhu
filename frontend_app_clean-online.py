@@ -10,6 +10,7 @@ st.write("Answer the questions below to estimate your annual health insurance pr
 age = st.number_input("What is your age?", min_value=18, max_value=100)
 height = st.number_input("What is your height in cm?", min_value=100.0, max_value=250.0)
 weight = st.number_input("What is your weight in kg?", min_value=30.0, max_value=200.0)
+surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
 
 # Dropdowns with initial blank option
 def dropdown(label):
@@ -22,46 +23,44 @@ chronic = dropdown("Do you have any chronic diseases?")
 allergies = dropdown("Do you have any known allergies?")
 cancer_history = dropdown("Is there a family history of cancer?")
 
-# Move surgeries to the end
-surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
+def to_binary(answer):
+    return 1 if answer == "Yes" else 0
 
-# Helper
-def to_binary(answer): return 1 if answer == "Yes" else 0
-
-def all_valid():
+# Validate that all dropdowns are selected and numeric inputs are valid
+def all_fields_completed():
     dropdowns = [diabetes, bp, transplants, chronic, allergies, cancer_history]
-    return all(ans in ["Yes", "No"] for ans in dropdowns)
+    return all(answer in ["Yes", "No"] for answer in dropdowns)
 
-submit = st.button("💡 Predict Premium", disabled=not all_valid())
+# Predict Premium
+if st.button("💡 Predict Premium"):
+    if not all_fields_completed():
+        st.warning("🚨 Please answer all questions before getting your premium estimate.")
+    else:
+        payload = {
+            "Age": age,
+            "Diabetes": to_binary(diabetes),
+            "BloodPressureProblems": to_binary(bp),
+            "AnyTransplants": to_binary(transplants),
+            "AnyChronicDiseases": to_binary(chronic),
+            "Height": height,
+            "Weight": weight,
+            "KnownAllergies": to_binary(allergies),
+            "HistoryOfCancerInFamily": to_binary(cancer_history),
+            "NumberOfMajorSurgeries": surgeries
+        }
 
-if submit:
-    payload = {
-        "Age": age,
-        "Diabetes": to_binary(diabetes),
-        "BloodPressureProblems": to_binary(bp),
-        "AnyTransplants": to_binary(transplants),
-        "AnyChronicDiseases": to_binary(chronic),
-        "Height": height,
-        "Weight": weight,
-        "KnownAllergies": to_binary(allergies),
-        "HistoryOfCancerInFamily": to_binary(cancer_history),
-        "NumberOfMajorSurgeries": surgeries
-    }
+        try:
+            response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
 
-    try:
-        response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
-
-        if response.status_code == 200:
-            result = response.json()
-            st.write("📦 Raw Response for Debugging:", result)  # TEMPORARY: Remove after debugging
-
-            premium = result.get("estimated_premium")
-            if premium is not None:
-                st.subheader("📦 Quotation from your Health Insurance Provider:")
-                st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
+            if response.status_code == 200:
+                result = response.json()
+                premium = result.get("estimated_premium")
+                if premium is not None:
+                    st.subheader("📦 Quotation from your Health Insurance Provider:")
+                    st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
+                else:
+                    st.write("Premium calculation was not successful. Please check your inputs or try again.")
             else:
-                st.error("⚠️ Premium calculation was not successful. Please check your inputs or try again.")
-        else:
-            st.error("❌ Server error: failed to retrieve a prediction.")
-    except Exception as e:
-        st.error(f"🚨 Something went wrong: {e}")
+                st.write("Unable to retrieve a prediction at the moment.")
+        except Exception:
+            st.write("Something went wrong. Try again later.")
