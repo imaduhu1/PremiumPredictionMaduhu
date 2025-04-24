@@ -6,11 +6,10 @@ st.set_page_config(page_title="Health Premium Estimator", layout="centered")
 st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 
-# Collect inputs
+# Collect numeric inputs
 age = st.number_input("What is your age?", min_value=18, max_value=100)
 height = st.number_input("What is your height in cm?", min_value=100.0, max_value=250.0)
 weight = st.number_input("What is your weight in kg?", min_value=30.0, max_value=200.0)
-surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
 
 # Dropdowns with initial blank option
 def dropdown(label):
@@ -23,10 +22,14 @@ chronic = dropdown("Do you have any chronic diseases?")
 allergies = dropdown("Do you have any known allergies?")
 cancer_history = dropdown("Is there a family history of cancer?")
 
+# Move surgeries field to the end
+surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
+
+# Convert responses
 def to_binary(answer):
     return 1 if answer == "Yes" else 0
 
-# Validate that all dropdowns are selected and numeric inputs are valid
+# Validate that all dropdowns are selected properly
 def all_fields_completed():
     dropdowns = [diabetes, bp, transplants, chronic, allergies, cancer_history]
     return all(answer in ["Yes", "No"] for answer in dropdowns)
