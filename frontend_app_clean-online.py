@@ -9,16 +9,16 @@ st.write("Answer the questions below to estimate your annual health insurance pr
 # Collect inputs
 age = st.number_input("What is your age?", min_value=18, max_value=100, value=30)
 
-diabetes = st.selectbox("Do you have diabetes?", ["No", "Yes"])
-bp = st.selectbox("Do you have blood pressure problems?", ["No", "Yes"])
-transplants = st.selectbox("Have you had any organ transplants?", ["No", "Yes"])
-chronic = st.selectbox("Do you have any chronic diseases?", ["No", "Yes"])
+diabetes = st.selectbox("Do you have diabetes?", [" ","No", "Yes"])
+bp = st.selectbox("Do you have blood pressure problems?", [" ","No", "Yes"])
+transplants = st.selectbox("Have you had any organ transplants?", [" ","No", "Yes"])
+chronic = st.selectbox("Do you have any chronic diseases?", [" ","No", "Yes"])
 
 height = st.number_input("What is your height in cm?", min_value=100.0, max_value=250.0, value=170.0)
 weight = st.number_input("What is your weight in kg?", min_value=30.0, max_value=200.0, value=70.0)
 
-allergies = st.selectbox("Do you have any known allergies?", ["No", "Yes"])
-cancer_history = st.selectbox("Is there a family history of cancer?", ["No", "Yes"])
+allergies = st.selectbox("Do you have any known allergies?", [" ","No", "Yes"])
+cancer_history = st.selectbox("Is there a family history of cancer?", [" ","No", "Yes"])
 surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
 
 def to_binary(answer):
