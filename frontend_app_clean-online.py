@@ -8,7 +8,7 @@ st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 
 # Collect inputs
-age = st.number_input("What is your age?", min_value=18, max_value=100, value=30)
+age = st.number_input("What is your age?", min_value=18, max_value=100, value="")
 
 diabetes = st.selectbox("Do you have diabetes?", [" ", "No", "Yes"])
 bp = st.selectbox("Do you have blood pressure problems?", [" ", "No", "Yes"])
