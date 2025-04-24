@@ -1,57 +1,83 @@
+
 import streamlit as st
 import requests
+import datetime
+import pandas as pd
 
-st.set_page_config(page_title="Health Premium Estimator", layout="centered")
+st.set_page_config(page_title="Health Premium Estimator", layout="wide")
 
-st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia")
-st.write("Answer the questions below to estimate your annual health insurance premium.")
+st.title("🩺 Health Insurance Premium Estimator Dashboard")
+st.markdown("Estimate your **annual premium** and track predictions below.")
 
-# Collect inputs
-age = st.number_input("What is your age?", min_value=18, max_value=100, value=30)
+# Sidebar input section
+st.sidebar.header("Enter your health info:")
 
-diabetes = st.selectbox("Do you have diabetes?", [" ","No", "Yes"])
-bp = st.selectbox("Do you have blood pressure problems?", [" ","No", "Yes"])
-transplants = st.selectbox("Have you had any organ transplants?", [" ","No", "Yes"])
-chronic = st.selectbox("Do you have any chronic diseases?", [" ","No", "Yes"])
+age = st.sidebar.number_input("Age (years)", min_value=0, max_value=100, value=0)
+height = st.sidebar.number_input("Height (cm)", min_value=100.0, max_value=250.0)
+weight = st.sidebar.number_input("Weight (kg)", min_value=30.0, max_value=200.0)
+surgeries = st.sidebar.slider("Major surgeries", 0, 10, 0)
 
-height = st.number_input("What is your height in cm?", min_value=100.0, max_value=250.0, value=170.0)
-weight = st.number_input("What is your weight in kg?", min_value=30.0, max_value=200.0, value=70.0)
+# Selectbox options with default placeholders
+def dropdown(label):
+    return st.sidebar.selectbox(label, ["Select an option", "No", "Yes"])
 
-allergies = st.selectbox("Do you have any known allergies?", [" ","No", "Yes"])
-cancer_history = st.selectbox("Is there a family history of cancer?", [" ","No", "Yes"])
-surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
+diabetes = dropdown("Do you have diabetes?")
+bp = dropdown("Do you have blood pressure problems?")
+transplants = dropdown("Have you had any organ transplants?")
+chronic = dropdown("Do you have any chronic diseases?")
+allergies = dropdown("Do you have any known allergies?")
+cancer_history = dropdown("Family history of cancer?")
 
-def to_binary(answer):
-    return 1 if answer == "Yes" else 0
+# Helper to convert yes/no to binary
+def to_binary(ans): return 1 if ans == "Yes" else 0
 
-if st.button("💡 Predict Premium"):
-    payload = {
-        "Age": age,
-        "Diabetes": to_binary(diabetes),
-        "BloodPressureProblems": to_binary(bp),
-        "AnyTransplants": to_binary(transplants),
-        "AnyChronicDiseases": to_binary(chronic),
-        "Height": height,
-        "Weight": weight,
-        "KnownAllergies": to_binary(allergies),
-        "HistoryOfCancerInFamily": to_binary(cancer_history),
-        "NumberOfMajorSurgeries": surgeries
-    }
+def all_valid():
+    checks = [age > 0, height > 0, weight > 0] +              [v != "Select an option" for v in [diabetes, bp, transplants, chronic, allergies, cancer_history]]
+    return all(checks)
 
-    try:
-        response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
+# Predict button
+if st.sidebar.button("💡 Predict Premium"):
+    if not all_valid():
+        st.warning("🚨 Please complete all fields before submitting.")
+    else:
+        payload = {
+            "Age": age,
+            "Diabetes": to_binary(diabetes),
+            "BloodPressureProblems": to_binary(bp),
+            "AnyTransplants": to_binary(transplants),
+            "AnyChronicDiseases": to_binary(chronic),
+            "Height": height,
+            "Weight": weight,
+            "KnownAllergies": to_binary(allergies),
+            "HistoryOfCancerInFamily": to_binary(cancer_history),
+            "NumberOfMajorSurgeries": surgeries
+        }
 
-        if response.status_code == 200:
-            result = response.json()
-            st.subheader("📦 Quotation from your Health Insurance Provider:")
-            st.json(result)
+        try:
+            response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
+            if response.status_code == 200:
+                result = response.json()
+                premium = result.get("estimated_premium") or result.get("estimated_premium_usd")
 
-            premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
-            if premium is not None:
-                st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
+                # Calculate BMI
+                bmi = round(weight / ((height / 100) ** 2), 2)
+
+                # Display results
+                st.subheader("📊 Quotation Summary")
+                col1, col2 = st.columns(2)
+                col1.metric("💰 Annual Premium", f"Rs. {premium:,.2f}")
+                col2.metric("📏 BMI", f"{bmi} kg/m²")
+
+                # Save to CSV for download
+                record = {
+                    "Timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+                    "Age": age, "BMI": bmi, "Premium": premium
+                }
+                df = pd.DataFrame([record])
+                df.to_csv("premium_predictions_log.csv", mode='a', header=not pd.io.common.file_exists("premium_predictions_log.csv"), index=False)
+                st.success("Prediction saved.")
+
             else:
-                st.write("Premium calculation was not successful. Please check your inputs or try again.")
-        else:
-            st.write("Unable to retrieve a prediction at the moment.")
-    except Exception:
-        st.write("Something went wrong. Try again later.")
+                st.warning("Unable to retrieve prediction.")
+        except Exception as e:
+            st.error(f"Something went wrong: {e}")
