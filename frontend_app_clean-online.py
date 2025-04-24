@@ -41,7 +41,7 @@ if st.button("💡 Predict Premium"):
     try: 
       response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
 
-        if response.status_code == 200:
+      if response.status_code == 200:
             result = response.json()
             st.subheader("📦 Quotation from your Health Insurance Provider:")
             st.json(result)  # 👈 This helps to debug what's actually returned
