@@ -45,7 +45,7 @@ if st.button("💡 Predict Premium"):
         if response.status_code == 200:
             result = response.json()
 
-            premium = result.get("estimated_premium") or result.get("estimated_premium_usd")
+            premium = result.get("estimated_premium") 
             if premium is not None:
                 st.subheader("📦 Quotation from your Health Insurance Provider:")
                 st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
