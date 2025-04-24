@@ -3,7 +3,7 @@ import requests
 
 st.set_page_config(page_title="Health Premium Estimator", layout="centered")
 
-st.title("🩺 Health Insurance Premium Predictor")
+st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 
 # Collect inputs
