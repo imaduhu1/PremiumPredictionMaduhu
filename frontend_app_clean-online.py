@@ -32,7 +32,7 @@ cancer_history = dropdown("Family history of cancer?")
 def to_binary(ans): return 1 if ans == "Yes" else 0
 
 def all_valid():
-    checks = [age > 0, height > 0, weight > 0] +              [v != "Select an option" for v in [diabetes, bp, transplants, chronic, allergies, cancer_history]]
+    checks = [age > 18, height > 100, weight > 40] +              [v != "Select an option" for v in [diabetes, bp, transplants, chronic, allergies, cancer_history]]
     return all(checks)
 
 # Predict button
