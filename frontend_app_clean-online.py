@@ -54,7 +54,7 @@ if st.button("💡 Predict Premium"):
             response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
             if response.status_code == 200:
                 result = response.json()
-                premium = result.get("estimated_premium")
+                premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
                 if premium is not None:
                     st.subheader("📦 Quotation from your Health Insurance Provider:")
                     st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
