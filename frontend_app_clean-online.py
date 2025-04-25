@@ -6,12 +6,13 @@ st.set_page_config(page_title="Health Premium Estimator", layout="centered")
 st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 
-# Numeric inputs with placeholder hints
-age = st.number_input("Age", min_value=18, max_value=100, format="%d", placeholder="Enter your age")
-height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, placeholder="Enter your height in cm")
-weight = st.number_input("Weight (kg)", min_value=30.0, max_value=200.0, placeholder="Enter your weight in kg")
+# Numeric inputs with placeholder-like prompts using label only
+age = st.number_input("What is your age? (e.g., 35)", min_value=18, max_value=100, format="%d", value=None, step=1)
+height = st.number_input("What is your height in cm? (e.g., 170)", min_value=100.0, max_value=250.0, value=None, step=0.1)
+weight = st.number_input("What is your weight in kg? (e.g., 70)", min_value=30.0, max_value=200.0, value=None, step=0.1)
 
 # Dropdowns with placeholder
+
 def dropdown(label):
     return st.selectbox(label, ["Select an option", "No", "Yes"])
 
@@ -30,7 +31,8 @@ def to_binary(answer): return 1 if answer == "Yes" else 0
 
 # Validation
 def all_fields_completed():
-    return all(ans in ["Yes", "No"] for ans in [diabetes, bp, transplants, chronic, allergies, cancer_history])
+    return all(ans in ["Yes", "No"] for ans in [diabetes, bp, transplants, chronic, allergies, cancer_history]) \
+        and age is not None and height is not None and weight is not None
 
 # Submit logic
 if st.button("💡 Predict Premium"):
