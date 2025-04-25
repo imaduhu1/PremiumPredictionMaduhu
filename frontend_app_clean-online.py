@@ -6,16 +6,16 @@ st.set_page_config(page_title="Health Premium Estimator", layout="centered")
 st.title("🩺 Health Insurance Premium Predictor © Maduhu, Chloe and Sonia.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 
-# Numeric inputs
-age = st.number_input("What is your age?", min_value=18, max_value=100)
-height = st.number_input("What is your height in cm?", min_value=100.0, max_value=250.0)
-weight = st.number_input("What is your weight in kg?", min_value=30.0, max_value=200.0)
+# Numeric inputs with placeholder hints
+age = st.number_input("Age", min_value=18, max_value=100, format="%d", placeholder="Enter your age")
+height = st.number_input("Height (cm)", min_value=100.0, max_value=250.0, placeholder="Enter your height in cm")
+weight = st.number_input("Weight (kg)", min_value=30.0, max_value=200.0, placeholder="Enter your weight in kg")
 
 # Dropdowns with placeholder
 def dropdown(label):
     return st.selectbox(label, ["Select an option", "No", "Yes"])
 
-diabetes = dropdown("Do you have diabetes?")
+diabetes = dropdown("Do you have diabetes or any history of diabetes in your family?")
 bp = dropdown("Do you have blood pressure problems?")
 transplants = dropdown("Have you had any organ transplants?")
 chronic = dropdown("Do you have any chronic diseases?")
@@ -54,12 +54,12 @@ if st.button("💡 Predict Premium"):
             response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
             if response.status_code == 200:
                 result = response.json()
-                premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
+                premium = result.get("estimated_premium")
                 if premium is not None:
                     st.subheader("📦 Quotation from your Health Insurance Provider:")
                     st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
                 else:
-                    st.write("Premium calculation was not successful. Please check your inputs or try again.")
+                    st.error("⚠️ We couldn’t calculate your premium at this time. Please review your inputs and try again.")
             else:
                 st.write("Unable to retrieve a prediction at the moment.")
         except Exception:
