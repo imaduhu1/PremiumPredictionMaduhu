@@ -35,7 +35,7 @@ def all_fields_completed():
         and age is not None and height is not None and weight is not None
 
 # Submit logic
-if st.button("💡 Predict Premium"):
+if st.button("💡 Click here to get your premium estimate"):
     if not all_fields_completed():
         st.warning("🚨 Please answer all questions before getting your premium estimate.")
     else:
