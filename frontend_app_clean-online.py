@@ -24,7 +24,7 @@ allergies = dropdown("Do you have any known allergies?")
 cancer_history = dropdown("Is there a family history of cancer?")
 
 # Surgeries at the end
-surgeries = st.slider("How many major surgeries have you had?", 0, 10, 0)
+surgeries = st.number_input("How many major surgeries have you had?(e.g.,2)", min_value=0, max_value=10, value=None, step=1)
 
 # Convert Yes/No to 1/0
 def to_binary(answer): return 1 if answer == "Yes" else 0
