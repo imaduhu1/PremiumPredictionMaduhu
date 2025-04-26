@@ -63,6 +63,6 @@ if st.button("💡 Click here to get your premium estimate"):
                 else:
                     st.error("⚠️ We couldn’t calculate your premium at this time. Please review your inputs and try again.")
             else:
-                st.write("Unable to retrieve a prediction at the moment.")
+                st.write("Unable to retrieve a prediction at the moment. Did you complete all the fields?")
         except Exception:
             st.write("Something went wrong. Try again later.")
