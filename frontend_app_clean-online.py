@@ -42,8 +42,9 @@ if st.button("💡 Click here to get your premium estimate"):
     else:
         st.session_state.confirm = True
 
-# Placeholder for confirmation
+# Placeholder for confirmation and premium result
 confirm_placeholder = st.empty()
+result_placeholder = st.empty()
 
 # Confirmation prompt
 if st.session_state.confirm:
@@ -55,38 +56,47 @@ if st.session_state.confirm:
         with col2:
             confirm_no = st.button("🔄 No, I want to review")
 
-        if confirm_yes:
-            confirm_placeholder.empty()
-            payload = {
-                "Age": age,
-                "Diabetes": to_binary(diabetes),
-                "BloodPressureProblems": to_binary(bp),
-                "AnyTransplants": to_binary(transplants),
-                "AnyChronicDiseases": to_binary(chronic),
-                "Height": height,
-                "Weight": weight,
-                "KnownAllergies": to_binary(allergies),
-                "HistoryOfCancerInFamily": to_binary(cancer_history),
-                "NumberOfMajorSurgeries": surgeries
-            }
+    if 'confirm_yes' not in st.session_state:
+        st.session_state.confirm_yes = False
 
-            try:
-                response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
-                if response.status_code == 200:
-                    result = response.json()
-                    premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
-                    if premium is not None:
-                        st.subheader("📦 Quotation from your Health Insurance Provider:")
-                        st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
-                    else:
-                        st.error("⚠️ We couldn’t calculate your premium at this time. Please review your inputs and try again.")
-                else:
-                    st.error("Unable to retrieve a prediction at the moment. Did you complete all the fields?")
-            except Exception:
-                st.error("Something went wrong. Try again later.")
+    if confirm_yes:
+        st.session_state.confirm_yes = True
+        st.session_state.confirm = False
+        confirm_placeholder.empty()
 
-            st.session_state.confirm = False
+    if confirm_no:
+        st.session_state.confirm = False
+        confirm_placeholder.empty()
 
-        elif confirm_no:
-            confirm_placeholder.empty()
-            st.session_state.confirm = False
+# Display premium estimate after confirmation
+if st.session_state.get('confirm_yes', False):
+    payload = {
+        "Age": age,
+        "Diabetes": to_binary(diabetes),
+        "BloodPressureProblems": to_binary(bp),
+        "AnyTransplants": to_binary(transplants),
+        "AnyChronicDiseases": to_binary(chronic),
+        "Height": height,
+        "Weight": weight,
+        "KnownAllergies": to_binary(allergies),
+        "HistoryOfCancerInFamily": to_binary(cancer_history),
+        "NumberOfMajorSurgeries": surgeries
+    }
+
+    try:
+        response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
+        if response.status_code == 200:
+            result = response.json()
+            premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
+            if premium is not None:
+                with result_placeholder.container():
+                    st.subheader("📦 Quotation from your Health Insurance Provider:")
+                    st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
+            else:
+                st.error("⚠️ We couldn’t calculate your premium at this time. Please review your inputs and try again.")
+        else:
+            st.error("Unable to retrieve a prediction at the moment. Did you complete all the fields?")
+    except Exception:
+        st.error("Something went wrong. Try again later.")
+
+    st.session_state.confirm_yes = False
