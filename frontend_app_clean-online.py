@@ -54,7 +54,7 @@ if st.session_state.confirm:
         with col1:
             confirm_yes = st.button("✅ Yes, I'm sure")
         with col2:
-            confirm_no = st.button("🔄 No, I want to review")
+            confirm_no = st.button("🔄 No, I want to review my details")
 
     if 'confirm_yes' not in st.session_state:
         st.session_state.confirm_yes = False
