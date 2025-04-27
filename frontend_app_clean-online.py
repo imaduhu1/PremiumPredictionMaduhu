@@ -42,9 +42,11 @@ if st.button("💡 Click here to get your premium estimate"):
     else:
         st.session_state.confirm = True
 
+# Placeholder for confirmation
+confirm_placeholder = st.empty()
+
 # Confirmation prompt
 if st.session_state.confirm:
-    confirm_placeholder = st.empty()
     with confirm_placeholder.container():
         st.info("🔔 Are you sure you want to submit?")
         col1, col2 = st.columns(2)
@@ -54,7 +56,7 @@ if st.session_state.confirm:
             confirm_no = st.button("🔄 No, I want to review")
 
         if confirm_yes:
-            confirm_placeholder.empty()  # Remove confirmation prompt
+            confirm_placeholder.empty()
             payload = {
                 "Age": age,
                 "Diabetes": to_binary(diabetes),
@@ -86,5 +88,5 @@ if st.session_state.confirm:
             st.session_state.confirm = False
 
         elif confirm_no:
-            st.session_state.confirm = False
             confirm_placeholder.empty()
+            st.session_state.confirm = False
