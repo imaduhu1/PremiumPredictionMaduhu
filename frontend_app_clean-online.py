@@ -42,14 +42,19 @@ if st.button("💡 Click here to get your premium estimate"):
     else:
         st.session_state.confirm = True
 
-# Confirmation prompt as pop-up
+# Confirmation prompt
 if st.session_state.confirm:
-    if st.modal("🔔 Confirmation", key="confirm_modal"):
-        st.write("Are you sure you want to submit?")
-        confirm_yes = st.button("✅ Yes, I'm sure")
-        confirm_no = st.button("🔄 No, I want to review")
+    confirm_placeholder = st.empty()
+    with confirm_placeholder.container():
+        st.info("🔔 Are you sure you want to submit?")
+        col1, col2 = st.columns(2)
+        with col1:
+            confirm_yes = st.button("✅ Yes, I'm sure")
+        with col2:
+            confirm_no = st.button("🔄 No, I want to review")
 
         if confirm_yes:
+            confirm_placeholder.empty()  # Remove confirmation prompt
             payload = {
                 "Age": age,
                 "Diabetes": to_binary(diabetes),
@@ -82,3 +87,4 @@ if st.session_state.confirm:
 
         elif confirm_no:
             st.session_state.confirm = False
+            confirm_placeholder.empty()
