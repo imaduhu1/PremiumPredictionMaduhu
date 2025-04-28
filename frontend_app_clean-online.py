@@ -5,7 +5,7 @@ import requests
 # Welcome message
 st.markdown(
     """
-    <marquee behavior="scroll" direction="left" style="color:blue; font-size:24px; font-weight:bold;">
+    <marquee behavior="scroll" direction="left" style="color:blue; font-size:36px; font-weight:bold;">
     Welcome to SOMACH Health Insurance Company Premium Calculator
     </marquee>
     """,
