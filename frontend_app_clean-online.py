@@ -1,7 +1,10 @@
 import streamlit as st
 import requests
 
-# Add moving blue message
+# Set_page_configuration
+st.set_page_config(page_title="Health Insurance Premium Estimator", layout="centered")
+
+# Welcome message
 st.markdown(
     """
     <marquee behavior="scroll" direction="left" style="color:blue; font-size:24px; font-weight:bold;">
@@ -10,8 +13,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-st.set_page_config(page_title="Health Insurance Premium Estimator", layout="centered")
 
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
