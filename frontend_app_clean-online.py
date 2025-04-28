@@ -1,11 +1,20 @@
 import streamlit as st
 import requests
 
-st.set_page_config(page_title="Health Premium Estimator", layout="centered")
+# Add moving blue message
+st.markdown(
+    """
+    <marquee behavior="scroll" direction="left" style="color:blue; font-size:24px; font-weight:bold;">
+    Welcome to SOMACH Health Insurance Company Premium Calculator
+    </marquee>
+    """,
+    unsafe_allow_html=True
+)
+
+st.set_page_config(page_title="Health Insurance Premium Estimator", layout="centered")
 
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
-
 # Numeric inputs
 age = st.number_input("What is your age? (e.g., 35)", min_value=18, max_value=100, format="%d", value=None, step=1)
 height = st.number_input("What is your height in cm? (e.g., 170)", min_value=100.0, max_value=250.0, value=None, step=0.1)
