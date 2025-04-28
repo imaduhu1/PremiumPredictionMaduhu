@@ -7,18 +7,14 @@ st.markdown(
     <style>
     .glow {
       color: #00BFFF;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
-      animation: glow-animation 1s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow-animation {
-      from {
-        text-shadow: 0 0 5px #00BFFF, 0 0 10px #00BFFF, 0 0 20px #00BFFF;
-      }
-      to {
-        text-shadow: 0 0 10px #1E90FF, 0 0 20px #1E90FF, 0 0 30px #1E90FF;
-      }
+      text-shadow: 
+         0 0 10px #00BFFF,
+         0 0 20px #00BFFF,
+         0 0 30px #1E90FF,
+         0 0 40px #1E90FF,
+         0 0 50px #1E90FF;
     }
     </style>
 
