@@ -2,29 +2,15 @@ import streamlit as st
 import requests
 
 # Set_page_configuration
+# Welcome message
 st.markdown(
     """
-    <style>
-    .glow {
-      color: #00BFFF;
-      font-size: 28px;
-      font-weight: bold;
-      text-shadow: 
-         0 0 10px #00BFFF,
-         0 0 20px #00BFFF,
-         0 0 30px #1E90FF,
-         0 0 40px #1E90FF,
-         0 0 50px #1E90FF;
-    }
-    </style>
-
-    <marquee behavior="scroll" direction="left">
-      <span class="glow">Welcome to SOMACH Health Insurance Company Premium Calculator</span>
+    <marquee behavior="scroll" direction="left" style="color:blue; font-size:24px; font-weight:bold;">
+    Welcome to SOMACH Health Insurance Company Premium Calculator
     </marquee>
     """,
     unsafe_allow_html=True
 )
-
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 # Numeric inputs
