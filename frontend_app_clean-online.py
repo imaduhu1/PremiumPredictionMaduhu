@@ -11,41 +11,38 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# --- SARAH CHATBOT INSIDE SIDEBAR ---
+# --- SARAH LIVE CHATBOT USING STREAMLIT CHAT ELEMENTS ---
 
 st.sidebar.title("💬 Chat with Sarah")
 
-# Initialize chat history
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+# Initialize Sarah's chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = [{"role": "assistant", "content": "👋 Hi, I'm Sarah! How can I help you today?"}]
 
-# Show all previous messages
-for sender, message in st.session_state.chat_history:
-    if sender == "user":
-        st.sidebar.write(f"🧑 You: {message}")
-    else:
-        st.sidebar.write(f"👩‍💻 Sarah: {message}")
+# Display all previous messages
+for msg in st.session_state.messages:
+    with st.sidebar.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
-# User text input
-user_input = st.sidebar.text_input("Ask Sarah something...")
+# User types a message
+user_message = st.sidebar.chat_input("Ask Sarah something...")
 
-if user_input:
+if user_message:
     # Save user message
-    st.session_state.chat_history.append(("user", user_input))
+    st.session_state.messages.append({"role": "user", "content": user_message})
     
-    # Generate Sarah's response
-    if "premium" in user_input.lower():
-        sarah_response = "💬 Your premium depends on age, health conditions, and medical history."
-    elif "hello" in user_input.lower() or "hi" in user_input.lower():
-        sarah_response = "👋 Hi there! How can I assist you today?"
-    elif "help" in user_input.lower():
-        sarah_response = "🤔 I'm here to help! You can ask about form questions or premium details."
+    # Generate Sarah's intelligent reply
+    if "premium" in user_message.lower():
+        sarah_reply = "💬 Your premium is based on your age, medical history, and other risk factors."
+    elif "hello" in user_message.lower() or "hi" in user_message.lower():
+        sarah_reply = "👋 Hello there! How can I assist you today?"
+    elif "help" in user_message.lower():
+        sarah_reply = "🤔 Sure! You can ask me how to fill out the form, what information you need, or anything else."
     else:
-        sarah_response = "I'm still learning! Try asking about 'premium' or 'insurance'."
+        sarah_reply = "🧠 I'm still learning! Try asking me about 'premium', 'help', or 'insurance'."
 
-    # Save Sarah's response
-    st.session_state.chat_history.append(("sarah", sarah_response))
+    # Save Sarah's reply
+    st.session_state.messages.append({"role": "assistant", "content": sarah_reply})
 
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
