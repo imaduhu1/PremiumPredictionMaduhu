@@ -11,6 +11,15 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# Sarah the chatbot
+with st.chat_message("assistant"):
+    st.markdown(
+        """
+        👋 **Hey, I am Sarah!**  
+        How can I help you today? Feel free to ask any question about your premium estimate. 💬
+        """
+    )
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 # Numeric inputs
