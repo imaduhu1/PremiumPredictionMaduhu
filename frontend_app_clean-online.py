@@ -12,61 +12,40 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- FLOATING CHATBOT SARAH SECTION ---
-st.markdown(
-    """
-    <style>
-    .chatbox {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        width: 300px;
-        background-color: white;
-        padding: 15px;
-        border: 2px solid #1E90FF;
-        border-radius: 10px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
-        z-index: 9999;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# --- SARAH CHATBOT INSIDE SIDEBAR ---
 
-with st.container():
-    # Floating chatbot position
-    st.markdown('<div class="chatbox">', unsafe_allow_html=True)
+st.sidebar.title("💬 Chat with Sarah")
 
-    st.write("👩‍💻 **Sarah**: Hey, I am Sarah! How can I help you today?")
+# Initialize chat history
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
 
-    if "chat_history" not in st.session_state:
-        st.session_state.chat_history = []
+# Show all previous messages
+for sender, message in st.session_state.chat_history:
+    if sender == "user":
+        st.sidebar.write(f"🧑 You: {message}")
+    else:
+        st.sidebar.write(f"👩‍💻 Sarah: {message}")
 
-    user_message = st.text_input("Type here...", key="chat_input")
+# User text input
+user_input = st.sidebar.text_input("Ask Sarah something...")
 
-    if user_message:
-        st.session_state.chat_history.append(("user", user_message))
+if user_input:
+    # Save user message
+    st.session_state.chat_history.append(("user", user_input))
+    
+    # Generate Sarah's response
+    if "premium" in user_input.lower():
+        sarah_response = "💬 Your premium depends on age, health conditions, and medical history."
+    elif "hello" in user_input.lower() or "hi" in user_input.lower():
+        sarah_response = "👋 Hi there! How can I assist you today?"
+    elif "help" in user_input.lower():
+        sarah_response = "🤔 I'm here to help! You can ask about form questions or premium details."
+    else:
+        sarah_response = "I'm still learning! Try asking about 'premium' or 'insurance'."
 
-        # Very basic response logic
-        if "premium" in user_message.lower():
-            response = "Your premium depends on your age, health condition, and history!"
-        elif "hello" in user_message.lower() or "hi" in user_message.lower():
-            response = "Hi there! 👋 I'm here to help you calculate your premium."
-        elif "help" in user_message.lower():
-            response = "Sure! You can ask about how to fill the form or estimate your premium."
-        else:
-            response = "I'm still learning. Try asking about 'premium' or 'insurance'."
-
-        st.session_state.chat_history.append(("sarah", response))
-
-    for sender, msg in st.session_state.chat_history:
-        if sender == "user":
-            st.write(f"🧑 You: {msg}")
-        else:
-            st.write(f"👩‍💻 Sarah: {msg}")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-# --- END OF FLOATING CHATBOT SECTION ---    
+    # Save Sarah's response
+    st.session_state.chat_history.append(("sarah", sarah_response))
 
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
