@@ -12,14 +12,43 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Sarah the chatbot
-with st.chat_message("assistant"):
-    st.markdown(
-        """
-        👋 **Hey, I am Sarah!**  
-        How can I help you today? Feel free to ask any question about your premium estimate. 💬
-        """
-    )
+# Chatbot "Sarah" live assistant in sidebar
+st.sidebar.title("💬 Sarah - Your Assistant")
+
+# Initialize chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Display previous chat messages
+for message in st.session_state.messages:
+    with st.sidebar.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Chat input
+prompt = st.sidebar.chat_input("Type your question here...")
+
+# If user sends a message
+if prompt:
+    # Save user message
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Generate Sarah's response
+    with st.sidebar.chat_message("assistant"):
+        # Very basic fixed responses for now
+        if "premium" in prompt.lower():
+            response = "Your premium is calculated based on your age, health conditions, and medical history."
+        elif "help" in prompt.lower():
+            response = "I'm here to help! You can ask about how to fill the form or premium details."
+        elif "hello" in prompt.lower() or "hi" in prompt.lower():
+            response = "Hello! 👋 How can I assist you today?"
+        else:
+            response = "I'm not sure about that yet, but I'm learning more every day! Try asking about 'premium' or 'health'."
+        
+        st.markdown(response)
+        
+    # Save Sarah's response
+    st.session_state.messages.append({"role": "assistant", "content": response})
+
 st.title("Health Insurance Premium Predictor by SOMACH.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 # Numeric inputs
