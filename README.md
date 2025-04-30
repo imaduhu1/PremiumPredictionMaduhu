@@ -38,7 +38,7 @@ The API layer receives user input in JSON format and returns a premium estimate.
 
 ### 🔹 Model Training
 
-The model is trained using the script `train_model.py`, which:
+The model is trained using the script `main.py`, which:
 - Loads `Medicalpremium.csv`
 - Engineers a `BMI` feature
 - Defines key features such as:
