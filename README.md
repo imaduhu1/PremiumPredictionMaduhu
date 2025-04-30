@@ -6,7 +6,7 @@ This is an interactive system that allows users to obtain personalized health in
 
 ## 🚀 Launch the App
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://medicalpremiumvisualizationchloe-innocent-sonia-bmhodbm3cfnpso.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://premiumpredictionfastapi-eozm2squ57wcjo6zbpvyl9.streamlit.app/)
 
 ---
 
@@ -33,8 +33,6 @@ The API layer receives user input in JSON format and returns a premium estimate.
 - Uses key features such as: age, BMI (auto-calculated from height and weight), history of diabetes, cancer, major surgeries, and other chronic conditions.
 - Is designed to handle live requests from the Streamlit app and respond with accurate premium values.
 
-API endpoint:  
-👉 `https://premiumpredictionfastapi-3.onrender.com/predict_premium/`
 
 ---
 
