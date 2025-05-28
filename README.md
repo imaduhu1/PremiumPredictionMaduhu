@@ -6,7 +6,7 @@ This is an interactive system that allows users to obtain personalized health in
 
 ## 🚀 Launch the App (Streamlit)
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://premiumpredictionfastapi-eozm2squ57wcjo6zbpvyl9.streamlit.app/)
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://premiumpredictionmaduhu-acwpryu8wy33ctvtaiqhmy.streamlit.app/)
 
 ---
 
