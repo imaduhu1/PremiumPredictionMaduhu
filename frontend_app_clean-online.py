@@ -6,13 +6,13 @@ import requests
 st.markdown(
     """
     <marquee behavior="scroll" direction="left" style="color:blue; font-size:40px; font-weight:bold;">
-    Welcome to SOMACH Health Insurance Company Premium Calculator
+    Welcome to Maduhu Health Insurance Company Premium Calculator
     </marquee>
     """,
     unsafe_allow_html=True
 )
  
-st.title("Health Insurance Premium Predictor by SOMACH.")
+st.title("Health Insurance Premium Predictor by Maduhu.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
 # Numeric inputs
 age = st.number_input("What is your age? (e.g., 35)", min_value=18, max_value=100, format="%d", value=None, step=1)
