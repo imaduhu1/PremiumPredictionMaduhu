@@ -16,7 +16,7 @@ This project delivers an end-to-end workflow for premium estimation:
 
 ### 🔹 Streamlit Interface
 
-The frontend app (`streamlitapp.py`) allows users to:
+The streamlit UI app (`streamlitapp.py`) allows users to:
 - Enter age, height, weight, and answer health-related questions.
 - Validate all inputs with clear prompts and drop-down menus.
 - Confirm details before submitting for a prediction.
