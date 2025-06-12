@@ -1,5 +1,6 @@
 import streamlit as st
-import requests
+import pandas as pd
+import joblib
 
 # Set_page_configuration
 # Welcome message
@@ -14,6 +15,10 @@ st.markdown(
  
 st.title("Health Insurance Premium Predictor by Maduhu.")
 st.write("Answer the questions below to estimate your annual health insurance premium.")
+
+# Load the trained model locally
+model = joblib.load("premium_model.pkl")
+
 # Numeric inputs
 age = st.number_input("What is your age? (e.g., 35)", min_value=18, max_value=100, format="%d", value=None, step=1)
 height = st.number_input("What is your height in cm? (e.g., 170)", min_value=100.0, max_value=250.0, value=None, step=0.1)
@@ -44,9 +49,9 @@ if 'confirm' not in st.session_state:
     st.session_state.confirm = False
 
 # Main submit button
-if st.button("💡 Click here to get your premium estimate"):
+if st.button("\ud83d\udca1 Click here to get your premium estimate"):
     if not all_fields_completed():
-        st.warning("🚨 Please answer all questions before getting your premium estimate.")
+        st.warning("\ud83d\udea8 Please answer all questions before getting your premium estimate.")
     else:
         st.session_state.confirm = True
 
@@ -57,12 +62,12 @@ result_placeholder = st.empty()
 # Confirmation prompt
 if st.session_state.confirm:
     with confirm_placeholder.container():
-        st.info("🔔 Are you sure you want to submit?")
+        st.info("\ud83d\udd14 Are you sure you want to submit?")
         col1, col2 = st.columns(2)
         with col1:
-            confirm_yes = st.button("✅ Yes, I'm sure")
+            confirm_yes = st.button("\u2705 Yes, I'm sure")
         with col2:
-            confirm_no = st.button("🔄 No, I want to review my details")
+            confirm_no = st.button("\ud83d\udd04 No, I want to review my details")
 
     if 'confirm_yes' not in st.session_state:
         st.session_state.confirm_yes = False
@@ -78,33 +83,25 @@ if st.session_state.confirm:
 
 # Display premium estimate after confirmation
 if st.session_state.get('confirm_yes', False):
-    payload = {
-        "Age": age,
-        "Diabetes": to_binary(diabetes),
-        "BloodPressureProblems": to_binary(bp),
-        "AnyTransplants": to_binary(transplants),
-        "AnyChronicDiseases": to_binary(chronic),
-        "Height": height,
-        "Weight": weight,
-        "KnownAllergies": to_binary(allergies),
-        "HistoryOfCancerInFamily": to_binary(cancer_history),
-        "NumberOfMajorSurgeries": surgeries
-    }
+    bmi = weight / ((height / 100) ** 2)
+    input_df = pd.DataFrame({
+        "Age": [age],
+        "Diabetes": [to_binary(diabetes)],
+        "BloodPressureProblems": [to_binary(bp)],
+        "AnyTransplants": [to_binary(transplants)],
+        "AnyChronicDiseases": [to_binary(chronic)],
+        "BMI": [bmi],
+        "KnownAllergies": [to_binary(allergies)],
+        "HistoryOfCancerInFamily": [to_binary(cancer_history)],
+        "NumberOfMajorSurgeries": [surgeries]
+    })
 
     try:
-        response = requests.post("https://premiumpredictionfastapi-3.onrender.com/predict_premium/", json=payload)
-        if response.status_code == 200:
-            result = response.json()
-            premium = result.get("estimated_premium_usd") or result.get("estimated_premium")
-            if premium is not None:
-                with result_placeholder.container():
-                    st.subheader("📦 Quotation from your Health Insurance Provider:")
-                    st.success(f"💰 Your annual premium is: **Rs. {premium:,.2f}**")
-            else:
-                st.error("⚠️ We couldn’t calculate your premium at this time. Please review your inputs and try again.")
-        else:
-            st.error("Unable to retrieve a prediction at the moment. Did you complete all the fields?")
+        premium = model.predict(input_df)[0]
+        with result_placeholder.container():
+            st.subheader("\ud83d\udce6 Quotation from your Health Insurance Provider:")
+            st.success(f"\ud83d\udcb0 Your annual premium is: **Rs. {premium:,.2f}**")
     except Exception:
-        st.error("Something went wrong. Try again later.")
+        st.error("Something went wrong while making the prediction. Please try again later.")
 
     st.session_state.confirm_yes = False
