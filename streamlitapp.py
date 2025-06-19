@@ -49,9 +49,9 @@ if 'confirm' not in st.session_state:
     st.session_state.confirm = False
 
 # Main submit button
-if st.button("\ud83d\udca1 Click here to get your premium estimate"):
+if st.button("Click here to get your premium estimate"):
     if not all_fields_completed():
-        st.warning("\ud83d\udea8 Please answer all questions before getting your premium estimate.")
+        st.warning("Please answer all questions before getting your premium estimate.")
     else:
         st.session_state.confirm = True
 
