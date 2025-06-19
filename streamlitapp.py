@@ -62,12 +62,12 @@ result_placeholder = st.empty()
 # Confirmation prompt
 if st.session_state.confirm:
     with confirm_placeholder.container():
-        st.info("\ud83d\udd14 Are you sure you want to submit?")
+        st.info("Are you sure you want to submit?")
         col1, col2 = st.columns(2)
         with col1:
-            confirm_yes = st.button("\u2705 Yes, I'm sure")
+            confirm_yes = st.button("Yes, I'm sure")
         with col2:
-            confirm_no = st.button("\ud83d\udd04 No, I want to review my details")
+            confirm_no = st.button("No, I want to review my details")
 
     if 'confirm_yes' not in st.session_state:
         st.session_state.confirm_yes = False
