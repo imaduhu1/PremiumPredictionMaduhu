@@ -99,8 +99,8 @@ if st.session_state.get('confirm_yes', False):
     try:
         premium = model.predict(input_df)[0]
         with result_placeholder.container():
-            st.subheader("\ud83d\udce6 Quotation from your Health Insurance Provider:")
-            st.success(f"\ud83d\udcb0 Your annual premium is: **Rs. {premium:,.2f}**")
+            st.subheader("Quotation from your Health Insurance Provider:")
+            st.success(f"Your annual premium is: **Rs. {premium:,.2f}**")
     except Exception:
         st.error("Something went wrong while making the prediction. Please try again later.")
 
